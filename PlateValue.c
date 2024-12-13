@@ -3,6 +3,7 @@
 #include <string.h>
 
 const int BASES[] = {17576000, 676000, 26000, 1000};
+const char NOTVALID[] = {'O', 'Q', 'U', 'I'};
 
 int isPlateValid(char plate[]);
 
@@ -36,7 +37,7 @@ int main(int argc, char* argv[]) {
 
     // Printing data
     printf("\nPlate---> \t%s", argv[1]);
-    printf("\nValue---> \t%d", value);
+    printf("\nValue---> \t%d\n", value);
 
     return 0;
 }
@@ -65,7 +66,13 @@ int isPlateValid(char plate[]) {
         }
 
         else {
-            if (letterValue(plate[i]) == -1) return 0;
+            if (letterValue(plate[i]) == -1)
+                return 0;
+            else {
+                for (int k = 0; k < sizeof(NOTVALID) / sizeof(NOTVALID[0]); k++) {
+                    if (plate[i] == NOTVALID[k]) return 0;
+                }
+            }
         }
     }
 
