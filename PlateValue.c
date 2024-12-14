@@ -1,9 +1,11 @@
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 const int BASES[] = {17576000, 676000, 26000, 1000};
-const char NOTVALID[] = {'O', 'Q', 'U', 'I'};
+
+char* toUpperCase(char plate[]);
 
 int isPlateValid(char plate[]);
 
@@ -13,6 +15,12 @@ int main(int argc, char* argv[]) {
     // Check if any plate is given
     if (argc == 1) {
         printf("\nERROR: No plate given");
+        return 0;
+    }
+
+    // Check if the plate has the correct lenght
+    if (strlen(argv[1]) != 7) {
+        printf("\nERROR: Plate must be 7 characters long");
         return 0;
     }
 
@@ -37,9 +45,18 @@ int main(int argc, char* argv[]) {
 
     // Printing data
     printf("\nPlate---> \t%s", argv[1]);
-    printf("\nValue---> \t%d\n", value);
+    printf("\nValue---> \t%d", value);
 
     return 0;
+}
+
+char* toUpperCase(char str[]) {
+    for (int i = 0; i < 7; i++) {
+        if (str[i] >= 'a' && str[i] <= 'z')
+            str[i] = str[i] - 32;
+    }
+
+    return str;
 }
 
 // Returns the value of a letter (es. a=1, b=2 ..)
@@ -58,23 +75,17 @@ int letterValue(int c) {
 
 // Returns 1 if a plate is valid, 0 otherwise
 int isPlateValid(char plate[]) {
-    if (strlen(plate) != 7) return 0;
+    // Variable to store initial regex()
+    regex_t reegex;
 
-    for (int i = 0; i < 7; i++) {
-        if (i > 1 && i < 5) {
-            if (plate[i] < 48 || plate[i] > 57) return 0;
-        }
+    // Creation of regEx
+    regcomp(&reegex, "^[A-HJ-NPR-TV-Z]{2}[0-9]{3}[A-HJ-NPR-TV-Z]{2}$", REG_EXTENDED);
 
-        else {
-            if (letterValue(plate[i]) == -1)
-                return 0;
-            else {
-                for (int k = 0; k < sizeof(NOTVALID) / sizeof(NOTVALID[0]); k++) {
-                    if (plate[i] == NOTVALID[k]) return 0;
-                }
-            }
-        }
-    }
+    // Checking if the plate matches the regex()
+    int result = !regexec(&reegex, toUpperCase(plate), 0, NULL, 0);
 
-    return 1;
+    // Free memory allocated to the pattern buffer by regcomp()
+    regfree(&reegex);
+
+    return result;
 }
