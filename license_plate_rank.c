@@ -5,11 +5,11 @@
 
 const int BASES[] = {17576000, 676000, 26000, 1000};
 
-char* toUpperCase(char plate[]);
+char* to_upper_case(char plate[]);
 
-int isPlateValid(char plate[]);
+int is_plate_valid(char plate[]);
 
-int letterValue(int c);
+int letter_value(int c);
 
 int main(int argc, char* argv[]) {
     // Check if any plate is given
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Check if plate is valid
-    if (!isPlateValid(argv[1])) {
+    if (!is_plate_valid(argv[1])) {
         printf("\nERROR: Plate not valid.");
         return 0;
     }
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     // Calculating plate value
     int value = 0;
     for (int i = 0; i < 4; i++)
-        value += letterValue(plate.letters[i]) * BASES[i];
+        value += letter_value(plate.letters[i]) * BASES[i];
     value += plate.numbers + 1;
 
     // Printing data
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-char* toUpperCase(char str[]) {
+char* to_upper_case(char str[]) {
     for (int i = 0; i < 7; i++) {
         if (str[i] >= 'a' && str[i] <= 'z')
             str[i] = str[i] - 32;
@@ -61,7 +61,7 @@ char* toUpperCase(char str[]) {
 
 // Returns the value of a letter (es. a=1, b=2 ..)
 // Returns -1 if the given char is not a letter
-int letterValue(int c) {
+int letter_value(int c) {
     if (c >= 97 && c <= 122) {
         return c - 97;
     }
@@ -74,7 +74,7 @@ int letterValue(int c) {
 }
 
 // Returns 1 if a plate is valid, 0 otherwise
-int isPlateValid(char plate[]) {
+int is_plate_valid(char plate[]) {
     // Variable to store initial regex()
     regex_t reegex;
 
@@ -82,7 +82,7 @@ int isPlateValid(char plate[]) {
     regcomp(&reegex, "^[A-HJ-NPR-TV-Z]{2}[0-9]{3}[A-HJ-NPR-TV-Z]{2}$", REG_EXTENDED);
 
     // Checking if the plate matches the regex()
-    int result = !regexec(&reegex, toUpperCase(plate), 0, NULL, 0);
+    int result = !regexec(&reegex, to_upper_case(plate), 0, NULL, 0);
 
     // Free memory allocated to the pattern buffer by regcomp()
     regfree(&reegex);
